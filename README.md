@@ -7,17 +7,17 @@ Matlab implementation of the Efficient Convolution Operator (ECO) tracker.
 
 Details about the tracker can be found in the CVPR 2017 paper:
 
-Martin Danelljan, Goutam Bhat, Fahad Khan, Michael Felsberg. 
-[<a href="https://arxiv.org/abs/1611.09224">ECO: Efficient Convolution Operators for Tracking</a>].
+Martin Danelljan, Goutam Bhat, Fahad Khan, Michael Felsberg.  
+<a href="https://arxiv.org/abs/1611.09224">ECO: Efficient Convolution Operators for Tracking</a>.  
 In Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition (CVPR), 2017. 
 
 Please cite the above publication if you use the code or compare with the ECO tracker in your work. Bibtex entry:
 
-@InProceedings{DanelljanCVPR2017,
-	Title                    = {ECO: Efficient Convolution Operators for Tracking},
-	Author                   = {Danelljan, Martin and Bhat, Goutam and Shahbaz Khan, Fahad and Felsberg, Michael},
-	Booktitle                = {CVPR},
-	Year                     = {2017}
+@InProceedings{DanelljanCVPR2017,  
+	Title                    = {ECO: Efficient Convolution Operators for Tracking},  
+	Author                   = {Danelljan, Martin and Bhat, Goutam and Shahbaz Khan, Fahad and Felsberg, Michael},  
+	Booktitle                = {CVPR},  
+	Year                     = {2017}  
 }
 
 
@@ -110,7 +110,7 @@ Currently, four types of features are included:
 
 2. HOG features. It uses the PDollar Toolbox [2], which is included as a git submodule in external_libs/pdollar_toolbox/.
 
-3. Lookup table features. These are implemented as a lookup table that directly maps an RGB or grayscale value to a feature vector. Currently, Color Names [7] and Intensity Channels [8] are included.
+3. Lookup table features. These are implemented as a lookup table that directly maps an RGB or grayscale value to a feature vector. Currently, Color Names [8] and Intensity Channels [9] are included.
 
 4. Colorspace features. Currently grayscale and RGB are implemented.
 
@@ -121,14 +121,19 @@ Each feature has its own parameter settings. You can set the cell size for each 
 See the runfile testing.m for examples of how to integrate different features. You can uncomment several features at once in the params.t_features cell array.
 
 
+### fDSST Scale Filter
+
+This reposetery also includes an implementation of the optimized scale filter, which was originally proposed in the fDSST [7]. It is here used in the ECO-HC version of the tracker for speeding-up the scale estimation.
+
+
 ### Integration Into OTB
 
-It should be easy to integrate the tracker into the Online Tracking Benchmark [9]. The runfiles supports the OTB interface, so you just have to copy and rename the runfile you want to use and then add the necessary paths (see setup_paths.m).
+It should be easy to integrate the tracker into the Online Tracking Benchmark [10]. The runfiles supports the OTB interface, so you just have to copy and rename the runfile you want to use and then add the necessary paths (see setup_paths.m).
 
 
 ### Integration Into VOT
 
-To integrate the tracker into the Visual Object Tracking (VOT) challenge toolkit [10], check the VOT_integration folder. Copy the configuration file to your VOT workspace and set the path to the CCOT reposetory inside it. 
+To integrate the tracker into the Visual Object Tracking (VOT) challenge toolkit [11], check the VOT_integration folder. Copy the configuration file to your VOT workspace and set the path to the ECO reposetory inside it. 
 
 
 ### Raw Results
@@ -137,7 +142,6 @@ Tracking performance can also vary slightly on different machines and Matlab ver
 
 All raw result files used in our CVPR 2017 paper can be found at the project webpage:
 http://www.cvl.isy.liu.se/research/objrec/visualtracking/ecotrack/index.html
-
 
 
 ## References
@@ -150,10 +154,10 @@ http://www.cvl.isy.liu.se/research/objrec/visualtracking/ecotrack/index.html
     Webpage: https://pdollar.github.io/toolbox/  
     GitHub: https://github.com/pdollar/toolbox  
 
-[3] Martin Danelljan, Andreas Robinson, Fahad Khan, Michael Felsberg.
-    Beyond Correlation Filters: Learning Continuous Convolution Operators for Visual Tracking.
-    In Proceedings of the European Conference on Computer Vision (ECCV), 2016.
-	http://www.cvl.isy.liu.se/research/objrec/visualtracking/conttrack/index.html
+[3] Martin Danelljan, Andreas Robinson, Fahad Khan, Michael Felsberg.  
+    Beyond Correlation Filters: Learning Continuous Convolution Operators for Visual Tracking.  
+    In Proceedings of the European Conference on Computer Vision (ECCV), 2016.  
+    http://www.cvl.isy.liu.se/research/objrec/visualtracking/conttrack/index.html
     
 [4] Martin Danelljan, Gustav Häger, Fahad Khan, Michael Felsberg.  
     Learning Spatially Regularized Correlation Filters for Visual Tracking.  
@@ -165,22 +169,27 @@ http://www.cvl.isy.liu.se/research/objrec/visualtracking/ecotrack/index.html
     ICCV workshop on the Visual Object Tracking (VOT) Challenge, 2015.  
     http://www.cvl.isy.liu.se/research/objrec/visualtracking/regvistrack/index.html
 	
-[6] Martin Danelljan, Gustav Häger, Fahad Shahbaz Khan and Michael Felsberg.  
+[6] Martin Danelljan, Gustav Häger, Fahad Khan and Michael Felsberg.  
     Accurate Scale Estimation for Robust Visual Tracking.  
     In Proceedings of the British Machine Vision Conference (BMVC), 2014.  
     http://www.cvl.isy.liu.se/research/objrec/visualtracking/scalvistrack/index.html
+    
+[7] Martin Danelljan, Gustav Häger, Fahad Khan, Michael Felsberg.  
+    Discriminative Scale Space Tracking.  
+    Transactions on Pattern Analysis and Machine Intelligence (TPAMI), 2017.  
+    http://www.cvl.isy.liu.se/research/objrec/visualtracking/scalvistrack/index.html
 
-[7] J. van de Weijer, C. Schmid, J. J. Verbeek, and D. Larlus.  
+[8] J. van de Weijer, C. Schmid, J. J. Verbeek, and D. Larlus.  
     Learning color names for real-world applications.  
     TIP, 18(7):1512–1524, 2009.  
 
-[8] M. Felsberg.  
+[9] M. Felsberg.  
     Enhanced distribution field tracking using channel representations.  
     In ICCV Workshop, 2013.
 
-[9] Y. Wu, J. Lim, and M.-H. Yang.  
+[10] Y. Wu, J. Lim, and M.-H. Yang.  
     Online object tracking: A benchmark.  
     In CVPR, 2013.  
     https://sites.google.com/site/trackerbenchmark/benchmarks/v10
 
-[10] http://votchallenge.net/
+[11] http://votchallenge.net/
