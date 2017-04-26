@@ -1,6 +1,6 @@
 # ECO
 
-Matlab implementation of the ECO tracker.
+Matlab implementation of the Efficient Convolution Operator (ECO) tracker.
 
 
 ## Publication
@@ -66,7 +66,7 @@ This package requires matconvnet [1], if you want to use deep CNN features, and 
 
 You could also downlad and install without using git. This is however not recommented since it will be harder to incorporate updates and you will not get the correct versions of matconvnet and PDollar Toolbox.
 
-1. Download ZIP file from https://github.com/martin-danelljan/Continuous-ConvOp and unpack it somewhere.
+1. Download ZIP file from https://github.com/martin-danelljan/ECO and unpack it somewhere.
 
 2. Download matconvnet ZIP file from https://github.com/vlfeat/matconvnet and unpack it in the external_libs/matconvnet/ folder of the repository.
    
@@ -83,21 +83,21 @@ The files in the runfiles/ directory are uset to set parameters and run the trac
 
 These runfiles are included:
 
-* ECCV2016_settings.m  -  Contains the parameter settings that were used in the ECCV 2016 paper.
+* OTB_DEEP_settings.m  -  Settings in the paper used for the deep feature version of ECO on the OTB, UAV123 and TempleColor datasets.
 
-* VOT2016_settings.m  -  Contains the parameter settings that were used in the Visual Object Tracking (VOT) 2016 challenge submission.
+* OTB_HC_settings.m  -  Settings in the paper used for the hand-crafted feature version of ECO (ECO-HC) on the OTB, UAV123 and TempleColor datasets.
 
-* CNN_HOG_settings.m  -  Employs Deep CNN features and HOG for the best performance.
+* VOT2016_DEEP_settings.m  -  Settings in the paper used for the deep feature version of ECO on the VOT2016 dataset.
 
-* HOG_CN_settings.m  -  Employs only HOG and Color Names [6] features with cell sizes 6 and 4 respectively. This version is faster and does not require matconvnet.
+* VOT2016_HC_settings.m  -  Settings in the paper used for the hand-crafted feature version of ECO (ECO-HC) on the VOT2016 dataset.
 
-* HOG_settings.m  -  Employs only HOG features. Similar to SRDCF but significantly faster (13 mean FPS on OTB-2015).
+* testing_ECO.m  -  Demo file which contains the same settings as OTB_DEEP_settings.m by default.
 
-* testing.m  -  Has the same settings as in ECCV2016_settings.m by default, but can be used for playing around with parameters and features.
+* testing_ECO_HC.m  -  Demo file which contains the same settings as OTB_HC_settings.m by default.
 
-Tracking performance on the OTB-2015 dataset is shown bellow for different runfile settings. For comparison, results of our previous trackers DSST [3], SRDCF [4] and DeepSRDCF [5] are included.
+Tracking performance on the OTB-2015 dataset is shown bellow for different settings. For comparison, results of our previous trackers C-COT [3], SRDCF [4], DeepSRDCF [5] and DSST [6] are included.
 
-<img src="https://github.com/martin-danelljan/Continuous-ConvOp/blob/master/result_plots/OTB-2015_succsess_plot.png" alt="Could not display image" height=400 width=500>
+<img src="https://github.com/martin-danelljan/ECO/blob/master/result_plots/OTB-2015_succsess_plot.png" alt="Could not display image" height=400 width=500>
 
 
 ### Features
@@ -110,56 +110,50 @@ Currently, four types of features are included:
 
 2. HOG features. It uses the PDollar Toolbox [2], which is included as a git submodule in external_libs/pdollar_toolbox/.
 
-3. Lookup table features. These are implemented as a lookup table that directly maps an RGB or grayscale value to a feature vector. Currently, Color Names [6] and Intensity Channels [7] are included.
+3. Lookup table features. These are implemented as a lookup table that directly maps an RGB or grayscale value to a feature vector. Currently, Color Names [7] and Intensity Channels [8] are included.
 
 4. Colorspace features. Currently grayscale and RGB are implemented.
 
 The tracker supports almost any combination of features. Currently, the only limitation is that you can only use deep features from a single network (but you can use several different layers from the same network).
 
-Each feature has its own parameter settings. You can set the cell size for each non-CNN feature independently. Unlike previous correlation based trackers, C-COT does not assume the same cell size for all feature channels. For the CNN features, you can control the cell size by setting an additional down-sampling factor for each layer.
+Each feature has its own parameter settings. You can set the cell size for each non-CNN feature independently. ECO does not assume the same cell size for all feature channels. For the CNN features, you can control the cell size by setting an additional down-sampling factor for each layer.
 
 See the runfile testing.m for examples of how to integrate different features. You can uncomment several features at once in the params.t_features cell array.
 
 
 ### Integration Into OTB
 
-It should be easy to integrate the tracker into the Online Tracking Benchmark [8]. The runfiles supports the OTB interface, so you just have to copy and rename the runfile you want to use and then add the necessary paths (see setup_paths.m).
+It should be easy to integrate the tracker into the Online Tracking Benchmark [9]. The runfiles supports the OTB interface, so you just have to copy and rename the runfile you want to use and then add the necessary paths (see setup_paths.m).
 
 
 ### Integration Into VOT
 
-To integrate the tracker into the Visual Object Tracking (VOT) challenge toolkit [9], check the VOT_integration folder. Copy the configuration file to your VOT workspace and set the path to the CCOT reposetory inside it. 
+To integrate the tracker into the Visual Object Tracking (VOT) challenge toolkit [10], check the VOT_integration folder. Copy the configuration file to your VOT workspace and set the path to the CCOT reposetory inside it. 
 
 
-### A Note on Results
+### Raw Results
 
-This code contains some minor updates and fixes compared to the code used for producing the results in our ECCV 2016 paper. This should however only have a marginal effect on performance (less than 0.5% on the OTB 2015 dataset). Tracking performance can also vary slightly on different machines and Matlab versions.
+Tracking performance can also vary slightly on different machines and Matlab versions.
 
-All raw result files used in our ECCV paper can be found at the project webpage:
-http://www.cvl.isy.liu.se/research/objrec/visualtracking/conttrack/index.html
+All raw result files used in our CVPR 2017 paper can be found at the project webpage:
+http://www.cvl.isy.liu.se/research/objrec/visualtracking/ecotrack/index.html
 
-If you, for some reason, want to run the exact same version of the code as used in our ECCV 2016 paper, please send an email to martin.danelljan@liu.se.
-
-
-## Acknowledgments
-
-Gustav Häger has contributed with some of the implementation, mainly regarding feature extraction.
 
 
 ## References
 
 [1] Webpage: http://www.vlfeat.org/matconvnet/  
-    GitHub repository: https://github.com/vlfeat/matconvnet
+    GitHub: https://github.com/vlfeat/matconvnet
 
 [2] Piotr Dollár.  
     "Piotr’s Image and Video Matlab Toolbox (PMT)."  
     Webpage: https://pdollar.github.io/toolbox/  
-    GitHub repository: https://github.com/pdollar/toolbox  
+    GitHub: https://github.com/pdollar/toolbox  
 
-[3] Martin Danelljan, Gustav Häger, Fahad Shahbaz Khan and Michael Felsberg.  
-    Accurate Scale Estimation for Robust Visual Tracking.  
-    In Proceedings of the British Machine Vision Conference (BMVC), 2014.  
-    http://www.cvl.isy.liu.se/research/objrec/visualtracking/scalvistrack/index.html
+[3] Martin Danelljan, Andreas Robinson, Fahad Khan, Michael Felsberg.
+    Beyond Correlation Filters: Learning Continuous Convolution Operators for Visual Tracking.
+    In Proceedings of the European Conference on Computer Vision (ECCV), 2016.
+	http://www.cvl.isy.liu.se/research/objrec/visualtracking/conttrack/index.html
     
 [4] Martin Danelljan, Gustav Häger, Fahad Khan, Michael Felsberg.  
     Learning Spatially Regularized Correlation Filters for Visual Tracking.  
@@ -170,18 +164,23 @@ Gustav Häger has contributed with some of the implementation, mainly regarding 
     Convolutional Features for Correlation Filter Based Visual Tracking.  
     ICCV workshop on the Visual Object Tracking (VOT) Challenge, 2015.  
     http://www.cvl.isy.liu.se/research/objrec/visualtracking/regvistrack/index.html
+	
+[6] Martin Danelljan, Gustav Häger, Fahad Shahbaz Khan and Michael Felsberg.  
+    Accurate Scale Estimation for Robust Visual Tracking.  
+    In Proceedings of the British Machine Vision Conference (BMVC), 2014.  
+    http://www.cvl.isy.liu.se/research/objrec/visualtracking/scalvistrack/index.html
 
-[6] J. van de Weijer, C. Schmid, J. J. Verbeek, and D. Larlus.  
+[7] J. van de Weijer, C. Schmid, J. J. Verbeek, and D. Larlus.  
     Learning color names for real-world applications.  
     TIP, 18(7):1512–1524, 2009.  
 
-[7] M. Felsberg.  
+[8] M. Felsberg.  
     Enhanced distribution field tracking using channel representations.  
     In ICCV Workshop, 2013.
 
-[8] Y. Wu, J. Lim, and M.-H. Yang.  
+[9] Y. Wu, J. Lim, and M.-H. Yang.  
     Online object tracking: A benchmark.  
     In CVPR, 2013.  
     https://sites.google.com/site/trackerbenchmark/benchmarks/v10
 
-[9] http://votchallenge.net/
+[10] http://votchallenge.net/
