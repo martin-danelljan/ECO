@@ -211,7 +211,7 @@ for frame = 1:num_frames
             sample_pos = round(pos);
             det_sample_pos = sample_pos;
             sample_scale = currentScaleFactor*scaleFactors;
-            xt = extract_features_fast(im, sample_pos, sample_scale, features, global_fparams, feature_extract_info);
+            xt = extract_features(im, sample_pos, sample_scale, features, global_fparams, feature_extract_info);
                         
             % Project sample
             xt_proj = project_sample(xt, projection_matrix);
@@ -277,7 +277,7 @@ for frame = 1:num_frames
         % Extract image region for training sample
         sample_pos = round(pos);
         sample_scale = currentScaleFactor;
-        xl = extract_features_fast(im, sample_pos, currentScaleFactor, features, global_fparams, feature_extract_info);
+        xl = extract_features(im, sample_pos, currentScaleFactor, features, global_fparams, feature_extract_info);
         
         % Do windowing of features
         xlw = cellfun(@(feat_map, cos_window) bsxfun(@times, feat_map, cos_window), xl, cos_window, 'uniformoutput', false);
@@ -319,7 +319,7 @@ for frame = 1:num_frames
             % Extract image region for training sample
             sample_pos = round(pos);
             sample_scale = currentScaleFactor;
-            xl = extract_features_fast(im, sample_pos, currentScaleFactor, features, global_fparams, feature_extract_info);
+            xl = extract_features(im, sample_pos, currentScaleFactor, features, global_fparams, feature_extract_info);
             
             % Project sample
             xl_proj = project_sample(xl, projection_matrix);

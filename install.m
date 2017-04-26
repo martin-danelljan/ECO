@@ -4,7 +4,7 @@
 
 warning('ON', 'ECO:install')
 
-% matconvnet
+% mtimesx
 if exist('external_libs/mtimesx', 'dir') == 7
     cd external_libs/mtimesx
     mtimesx_build;

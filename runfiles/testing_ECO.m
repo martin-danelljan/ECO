@@ -1,4 +1,4 @@
-function results = OTB_DEEP_settings(seq, res_path, bSaveImage, parameters)
+function results = testing_ECO(seq, res_path, bSaveImage, parameters)
 
 close all
 

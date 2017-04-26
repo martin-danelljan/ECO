@@ -26,3 +26,6 @@ addpath(genpath([pathstr '/external_libs/pdollar_toolbox/channels']));
 
 % Mtimesx
 addpath([pathstr '/external_libs/mtimesx/']);
+
+% mexResize
+addpath([pathstr '/external_libs/mexResize/']);
