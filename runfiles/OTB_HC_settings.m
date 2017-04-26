@@ -1,4 +1,4 @@
-function results = OTB_HOG_CN_settings(seq, res_path, bSaveImage, parameters)
+function results = OTB_HC_settings(seq, res_path, bSaveImage, parameters)
 
 close all
 
@@ -94,7 +94,7 @@ params.interpolation_windowing = false;     % Do additional windowing on the Fou
 
 % Scale filter parameters
 % Only used if: params.use_scale_filter = true
-params.use_scale_filter = false;        % Use the fDSST scale filter or not (for speed)
+params.use_scale_filter = true;        % Use the fDSST scale filter or not (for speed)
 params.scale_sigma_factor = 1/16;       % Scale label function sigma
 params.scale_learning_rate = 0.025;		% Scale filter learning rate
 params.number_of_scales_filter = 17;    % Number of scales
