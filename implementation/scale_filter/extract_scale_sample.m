@@ -29,8 +29,12 @@ for s = 1:nScales
     im_patch = im(ys, xs, :);
     
     % resize image to model size
-%     im_patch_resized = imresize(im_patch, scale_model_sz, 'bilinear');
-    im_patch_resized = mexResize(im_patch, scale_model_sz, 'auto');
+    try
+        im_patch_resized = mexResize(im_patch, scale_model_sz, 'auto');
+    catch
+        warning('ECO:extract_scale_sample', 'Error when using the mexResize function. Using Matlab''s interpolation function instead, which is slower.');
+        im_patch_resized = imresize(im_patch, scale_model_sz, 'bilinear', 'Antialiasing',false);
+    end
     
     % extract scale features
     temp_hog = fhog(single(im_patch_resized), 4);

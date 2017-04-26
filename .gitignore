@@ -1,5 +1,9 @@
 *~
 *.asv
-*.mexw*
-*.mexa*
+external_libs/matconvnet/*.mexw*
+external_libs/matconvnet/*.mexa*
+external_libs/pdollar_toolbox/*.mexw*
+external_libs/pdollar_toolbox/*.mexa*
+external_libs/mtimesx/*.mexw*
+external_libs/mtimesx/*.mexa*
 feature_extraction/networks
