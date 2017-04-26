@@ -1,0 +1,6 @@
+[submodule "external_libs/matconvnet"]
+	path = external_libs/matconvnet
+	url = git@github.com:vlfeat/matconvnet.git
+[submodule "external_libs/pdollar_toolbox"]
+	path = external_libs/pdollar_toolbox
+	url = git@github.com:pdollar/toolbox.git
