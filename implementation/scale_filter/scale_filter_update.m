@@ -4,7 +4,7 @@ function scale_filter = scale_filter_update(im, pos, base_target_sz, currentScal
 
 % Get scale filter features
 scales = currentScaleFactor*scale_filter.scaleSizeFactors;
-xs = extract_scale_sample(im, pos, base_target_sz, scales, params.scale_model_sz);
+xs = extract_scale_sample(im, pos, base_target_sz, scales, params.scale_model_sz, params.use_mexResize);
 
 is_first_frame = ~isfield(scale_filter, 's_num');
 

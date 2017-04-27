@@ -4,7 +4,7 @@ function scale_change_factor = scale_filter_track(im, pos, base_target_sz, curre
 
 % Get scale filter features
 scales = currentScaleFactor*scale_filter.scaleSizeFactors;
-xs = extract_scale_sample(im, pos, base_target_sz, scales, params.scale_model_sz);
+xs = extract_scale_sample(im, pos, base_target_sz, scales, params.scale_model_sz, params.use_mexResize);
 
 % Project
 xs = feature_projection_scale(xs, scale_filter.basis, scale_filter.window);

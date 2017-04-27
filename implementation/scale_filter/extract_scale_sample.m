@@ -1,6 +1,10 @@
-function scale_sample = extract_scale_sample(im, pos, base_target_sz, scaleFactors, scale_model_sz)
+function scale_sample = extract_scale_sample(im, pos, base_target_sz, scaleFactors, scale_model_sz, use_mexResize)
 
 % Get scale filter sample.
+
+if nargin < 6
+    use_mexResize = true;
+end
 
 nScales = length(scaleFactors);
 
@@ -29,10 +33,9 @@ for s = 1:nScales
     im_patch = im(ys, xs, :);
     
     % resize image to model size
-    try
+    if use_mexResize
         im_patch_resized = mexResize(im_patch, scale_model_sz, 'auto');
-    catch
-        warning('ECO:extract_scale_sample', 'Error when using the mexResize function. Using Matlab''s interpolation function instead, which is slower.\nTry the compile script in "external_libs/mexResize/".');
+    else
         im_patch_resized = imresize(im_patch, scale_model_sz, 'bilinear', 'Antialiasing',false);
     end
     

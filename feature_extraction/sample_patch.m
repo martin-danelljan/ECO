@@ -1,7 +1,10 @@
-function resized_patch = sample_patch(im, pos, sample_sz, output_sz)
+function resized_patch = sample_patch(im, pos, sample_sz, output_sz, gparams)
 
 if nargin < 4
     output_sz = [];
+end
+if nargin < 5
+    gparams.use_mexResize = true;
 end
 
 %make sure the size is not to small
@@ -23,10 +26,9 @@ im_patch = im(ys, xs, :);
 if isempty(output_sz) || isequal(sample_sz(:), output_sz(:))
     resized_patch = im_patch;
 else
-    try
+    if gparams.use_mexResize
         resized_patch = mexResize(im_patch, output_sz, 'auto');
-    catch
-        warning('ECO:sample_patch', 'Error when using the mexResize function. Using Matlab''s interpolation function instead, which is slower.\nTry the compile script in "external_libs/mexResize/".');
+    else
         resized_patch = imresize(im_patch, output_sz, 'bilinear', 'Antialiasing',false);
     end
 end

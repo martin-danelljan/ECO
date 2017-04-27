@@ -46,6 +46,17 @@ if size(im,3) > 1 && is_color_image == false
     im = im(:,:,1);
 end
 
+% Check if mexResize is available and show warning otherwise.
+params.use_mexResize = true;
+global_fparams.use_mexResize = true;
+try
+    [~] = mexResize(ones(5,5,3,'uint8'), [3 3], 'auto');
+catch err
+    warning('ECO:tracker', 'Error when using the mexResize function. Using Matlab''s interpolation function instead, which is slower.\nTry to run the compile script in "external_libs/mexResize/".\n\nThe error was:\n%s', getReport(err));
+    params.use_mexResize = false;
+    global_fparams.use_mexResize = false;
+end
+
 % Calculate search area and initial scale factor
 search_area = prod(init_target_sz * params.search_area_scale);
 if search_area > params.max_image_sample_size

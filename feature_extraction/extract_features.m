@@ -19,7 +19,7 @@ for sz_ind = 1:num_sizes
     img_input_sz = extract_info.img_input_sizes{sz_ind};
     img_samples{sz_ind} = zeros(img_input_sz(1), img_input_sz(2), size(image,3), num_scales, 'uint8');
     for scale_ind = 1:num_scales
-        img_samples{sz_ind}(:,:,:,scale_ind) = sample_patch(image, pos, round(img_sample_sz*scales(scale_ind)), img_input_sz);
+        img_samples{sz_ind}(:,:,:,scale_ind) = sample_patch(image, pos, round(img_sample_sz*scales(scale_ind)), img_input_sz, gparams);
     end
 end
 
