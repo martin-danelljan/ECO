@@ -26,7 +26,7 @@ else
     try
         resized_patch = mexResize(im_patch, output_sz, 'auto');
     catch
-        warning('ECO:sample_patch', 'Error when using the mexResize function. Using Matlab''s interpolation function instead, which is slower.');
+        warning('ECO:sample_patch', 'Error when using the mexResize function. Using Matlab''s interpolation function instead, which is slower.\nTry the compile script in "external_libs/mexResize/".');
         resized_patch = imresize(im_patch, output_sz, 'bilinear', 'Antialiasing',false);
     end
 end

@@ -32,7 +32,7 @@ for s = 1:nScales
     try
         im_patch_resized = mexResize(im_patch, scale_model_sz, 'auto');
     catch
-        warning('ECO:extract_scale_sample', 'Error when using the mexResize function. Using Matlab''s interpolation function instead, which is slower.');
+        warning('ECO:extract_scale_sample', 'Error when using the mexResize function. Using Matlab''s interpolation function instead, which is slower.\nTry the compile script in "external_libs/mexResize/".');
         im_patch_resized = imresize(im_patch, scale_model_sz, 'bilinear', 'Antialiasing',false);
     end
     
