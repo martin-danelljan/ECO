@@ -2,6 +2,7 @@
 
 Matlab implementation of the Efficient Convolution Operator (ECO) tracker.
 
+Stay tuned for the full <b>GPU version</b> of the ECO tracker.
 
 ## Publication
 
