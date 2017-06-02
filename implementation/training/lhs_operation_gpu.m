@@ -2,18 +2,25 @@ function hf_out = lhs_operation_gpu(hf, samplesf, reg_filter, sample_weights)
 
 % This is the left-hand-side operation in Conjugate Gradient
 
-% size of the padding
+% Get sizes
 num_features = length(hf);
-output_sz = [size(hf{1},1), 2*size(hf{1},2)-1];
+filter_sz = zeros(num_features,2);
+for k = 1:num_features
+    filter_sz(k,:) = [size(hf{k},1), size(hf{k},2)];
+end
+[~, k1] = max(filter_sz(:,1));  % Index for the feature block with the largest spatial size
+block_inds = 1:num_features;
+block_inds(k1) = [];
+output_sz = [size(hf{k1},1), 2*size(hf{k1},2)-1];
 
 % Compute the operation corresponding to the data term in the optimization
 % (blockwise matrix multiplications)
 %implements: A' diag(sample_weights) A f
 
 % sum over all features and feature blocks
-sh = sum(bsxfun(@times, samplesf{1}, hf{1}), 3);    % assumes the feature with the highest resolution is first
+sh = sum(bsxfun(@times, samplesf{k1}, hf{k1}), 3);    % assumes the feature with the highest resolution is first
 pad_sz = cell(1,1,num_features);
-for k = 2:num_features
+for k = block_inds
     pad_sz{k} = (output_sz - [size(hf{k},1), 2*size(hf{k},2)-1]) / 2;
     
     sh(1+pad_sz{k}(1):end-pad_sz{k}(1), 1+pad_sz{k}(2):end,1,:) = ...
@@ -25,8 +32,8 @@ sh = conj(bsxfun(@times,sample_weights,sh));
 
 % multiply with the transpose
 hf_out = cell(1,1,num_features);
-hf_out{1} = conj(sum(bsxfun(@times, sh, samplesf{1}), 4));
-for k = 2:num_features
+hf_out{k1} = conj(sum(bsxfun(@times, sh, samplesf{k1}), 4));
+for k = block_inds
     hf_out{k} = conj(sum(bsxfun(@times, sh(1+pad_sz{k}(1):end-pad_sz{k}(1), 1+pad_sz{k}(2):end,1,:), samplesf{k}), 4));
 end
 

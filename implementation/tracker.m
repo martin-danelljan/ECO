@@ -41,7 +41,6 @@ global_fparams.data_type = params.data_type;
 init_target_sz = target_sz;
 
 % Check if color image
-% im = imread(s_frames{1});
 if size(im,3) == 3
     if all(all(im(:,:,1) == im(:,:,2)))
         is_color_image = false;
@@ -120,7 +119,12 @@ filter_sz = feature_sz + mod(feature_sz+1, 2);
 filter_sz_cell = permute(mat2cell(filter_sz, ones(1,num_feature_blocks), 2), [2 3 1]);
 
 % The size of the label function DFT. Equal to the maximum filter size.
-output_sz = max(filter_sz, [], 1);
+[output_sz, k1] = max(filter_sz, [], 1);
+k1 = k1(1);
+
+% Get the remaining block indices
+block_inds = 1:num_feature_blocks;
+block_inds(k1) = [];
 
 % How much each feature block has to be padded to the obtain output_sz
 pad_sz = cellfun(@(filter_sz) (output_sz - filter_sz) / 2, filter_sz_cell, 'uniformoutput', false);
@@ -275,9 +279,9 @@ while true
             
             % Compute convolution for each feature block in the Fourier domain
             % and the sum over all blocks.
-            scores_fs_feat{1} = sum(bsxfun(@times, hf_full{1}, xtf_proj{1}), 3);
-            scores_fs_sum = scores_fs_feat{1};
-            for k = 2:num_feature_blocks
+            scores_fs_feat{k1} = sum(bsxfun(@times, hf_full{k1}, xtf_proj{k1}), 3);
+            scores_fs_sum = scores_fs_feat{k1};
+            for k = block_inds
                 scores_fs_feat{k} = sum(bsxfun(@times, hf_full{k}, xtf_proj{k}), 3);
                 scores_fs_sum(1+pad_sz{k}(1):end-pad_sz{k}(1), 1+pad_sz{k}(2):end-pad_sz{k}(2),1,:) = ...
                     scores_fs_sum(1+pad_sz{k}(1):end-pad_sz{k}(1), 1+pad_sz{k}(2):end-pad_sz{k}(2),1,:) + ...
