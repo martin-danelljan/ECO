@@ -1,8 +1,5 @@
-function results = OTB_HOG_CN_settings(seq, res_path, bSaveImage, parameters)
+function results = VOT2016_HC_settings(seq, res_path, bSaveImage, parameters)
 
-close all
-
-s_frames = seq.s_frames;
 
 % Feature specific parameters
 hog_params.cell_size = 6;
@@ -59,9 +56,8 @@ params.projection_reg = 5e-7;	 	 	% Regularization paremeter of the projection m
 
 % Generative sample space model parameters
 params.use_sample_merge = true;                 % Use the generative sample space model to merge samples
-params.sample_update_criteria = 'Merge';        % Strategy for updating the samples
-params.weight_update_criteria = 'WeightedAdd';  % Strategy for updating the distance matrix
-params.neglect_higher_frequency = false;        % Neglect hiigher frequency components in the distance comparison for speed
+params.sample_merge_type = 'Merge';             % Strategy for updating the samples
+params.distance_matrix_update_type = 'exact';   % Strategy for updating the distance matrix
 
 % Conjugate Gradient parameters
 params.CG_iter = 5;                     % The number of Conjugate Gradient iterations in each update after the first frame
@@ -107,15 +103,15 @@ params.s_num_compressed_dim = 'MAX';    % Number of compressed feature dimension
 params.lambda = 1e-2;					% Scale filter regularization
 params.do_poly_interp = true;           % Do 2nd order polynomial interpolation to obtain more accurate scale
  
-% Other parameters
+% Visualization
 params.visualization = 0;               % Visualiza tracking and detection scores
 params.debug = 0;                       % Do full debug visualization
 
+% GPU
+params.use_gpu = false;                 % Enable GPU or not
+params.gpu_id = [];                     % Set the GPU id, or leave empty to use default
 
 % Initialize
-params.init_sz = [seq.init_rect(1,4), seq.init_rect(1,3)];
-params.init_pos = [seq.init_rect(1,2), seq.init_rect(1,1)] + (params.init_sz - 1)/2;
-params.s_frames = s_frames;
-
+params.seq = seq;
 % Run tracker
 results = tracker(params);

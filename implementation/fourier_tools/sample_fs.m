@@ -4,7 +4,7 @@ function x = sample_fs(xf, grid_sz)
 
 sz = [size(xf,1) size(xf,2)];
 
-if nargin < 2
+if nargin < 2 || all(sz == grid_sz)
     x = prod(sz) * cifft2(xf);
 else
     if any(grid_sz < sz)

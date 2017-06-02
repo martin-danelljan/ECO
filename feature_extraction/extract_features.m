@@ -6,20 +6,31 @@ function feature_map = extract_features(image, pos, scales, features, gparams, e
 
 if ~iscell(features)
     error('Wrong input');
-end;
+end
+
+if ~isfield(gparams, 'use_gpu')
+    gparams.use_gpu = false;
+end
+if ~isfield(gparams, 'data_type')
+    gparams.data_type = zeros(1, 'single');
+end
+if nargin < 6
+    % Find used image sample size
+    extract_info = get_feature_extract_info(features);
+end
 
 num_features = length(features);
 num_scales = length(scales);
 num_sizes = length(extract_info.img_sample_sizes);
 
 % Extract image patches
-img_samples = cell(2,1);
+img_samples = cell(num_sizes,1);
 for sz_ind = 1:num_sizes
     img_sample_sz = extract_info.img_sample_sizes{sz_ind};
     img_input_sz = extract_info.img_input_sizes{sz_ind};
     img_samples{sz_ind} = zeros(img_input_sz(1), img_input_sz(2), size(image,3), num_scales, 'uint8');
     for scale_ind = 1:num_scales
-        img_samples{sz_ind}(:,:,:,scale_ind) = sample_patch(image, pos, round(img_sample_sz*scales(scale_ind)), img_input_sz, gparams);
+        img_samples{sz_ind}(:,:,:,scale_ind) = sample_patch(image, pos, img_sample_sz*scales(scale_ind), img_input_sz, gparams);
     end
 end
 
@@ -37,7 +48,7 @@ feature_map = cell(1, 1, num_feature_blocks);
 ind = 1;
 for feat_ind = 1:num_features
     feat = features{feat_ind};
-    gparams.cell_size = feat.fparams.cell_size;
+%     gparams.cell_size = feat.fparams.cell_size;
     
     % get the image patch index
     img_sample_ind = cellfun(@(sz) isequal(feat.img_sample_sz, sz), extract_info.img_sample_sizes);

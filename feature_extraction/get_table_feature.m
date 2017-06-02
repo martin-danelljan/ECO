@@ -1,4 +1,4 @@
-function [ features ] = get_table_feature( im, fparam, gparam)
+function [ feature_map ] = get_table_feature( im, fparam, gparam)
 %get per-pixel features using a lookup table, if the gparam feature cell
 %size is set to something large than one, the resulting data will be
 %averaged in cells of the specified size.
@@ -10,6 +10,12 @@ persistent tables;
 
 if isempty(tables)
     tables = {};
+end
+
+if isfield(fparam, 'cell_size')
+    cell_size = fparam.cell_size;
+else
+    cell_size = gparam.cell_size;
 end
 
 tab_ind = 0;
@@ -40,13 +46,15 @@ elseif strcmp(tables{tab_ind}.inputType,'gray')
     end
 end
 
-%else extract the feature and return it
-temp_features = table_lookup(im,tables{tab_ind}.(fparam.tablename));
-
-if gparam.cell_size > 1
-    features = average_feature_region(temp_features,gparam.cell_size);
+% Extract features from table
+if gparam.use_gpu
+    feature_map = gpuArray(table_lookup(im,tables{tab_ind}.(fparam.tablename)));
 else
-    features = temp_features;
+    feature_map = table_lookup(im,tables{tab_ind}.(fparam.tablename));
+end
+
+if cell_size > 1
+    feature_map = average_feature_region(feature_map, cell_size);
 end
 
 end

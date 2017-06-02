@@ -25,7 +25,6 @@ else
             lt_index = I(1:params.lt_size);
             st_index = I(params.lt_size+1:end);
             
-            %some things are best forgotten...
             dummy_w = sample_weights;
             dummy_w(st_index) = inf;
             [~, replace_ind] = min(dummy_w);

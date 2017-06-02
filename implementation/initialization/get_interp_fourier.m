@@ -38,5 +38,5 @@ if params.interpolation_windowing
     interp2_fs = interp2_fs .* win2(2:end-1)';
 end
 
-interp1_fs = single(interp1_fs);
-interp2_fs = single(interp2_fs);
+interp1_fs = cast(interp1_fs, 'like', params.data_type);
+interp2_fs = cast(interp2_fs, 'like', params.data_type);

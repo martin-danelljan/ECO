@@ -2,7 +2,10 @@
 
 Matlab implementation of the Efficient Convolution Operator (ECO) tracker.
 
-Stay tuned for the full <b>GPU version</b> of the ECO tracker.
+<b>Version 2.0 is here!</b>
+* Full GPU support
+* Optimization and cleanup
+* VOT2017 integration
 
 ## Publication
 
@@ -94,6 +97,8 @@ These runfiles are included:
 
 * testing_ECO.m  -  Demo file which contains the same settings as OTB_DEEP_settings.m by default.
 
+* testing_ECO_gpu.m  -  Same as testing_ECO, but uses GPU.
+
 * testing_ECO_HC.m  -  Demo file which contains the same settings as OTB_HC_settings.m by default.
 
 Tracking performance on the OTB-2015 dataset is shown bellow for different settings. For comparison, results of our previous trackers C-COT [3], SRDCF [4], DeepSRDCF [5] and DSST [6] are included.
@@ -127,6 +132,11 @@ See the runfile testing.m for examples of how to integrate different features. Y
 This reposetery also includes an implementation of the optimized scale filter, which was originally proposed in the fDSST [7]. It is here used in the ECO-HC version of the tracker for speeding-up the scale estimation.
 
 
+### GPU Support
+
+GPU support is activated by setting the parameter "params.use_gpu = true" in the runfile. This requires MatConvNet to be compiled with GPU support. If the install script fails, please visit http://www.vlfeat.org/matconvnet/install/ for instructions.
+
+
 ### Integration Into OTB
 
 It should be easy to integrate the tracker into the Online Tracking Benchmark [10]. The runfiles supports the OTB interface, so you just have to copy and rename the runfile you want to use and then add the necessary paths (see setup_paths.m).
@@ -134,7 +144,7 @@ It should be easy to integrate the tracker into the Online Tracking Benchmark [1
 
 ### Integration Into VOT
 
-To integrate the tracker into the Visual Object Tracking (VOT) challenge toolkit [11], check the VOT_integration folder. Copy the configuration file to your VOT workspace and set the path to the ECO reposetory inside it. 
+To integrate the tracker into the Visual Object Tracking (VOT) challenge toolkit [11], check the VOT_integration folder. Copy the configuration file to your VOT workspace and set the path to the ECO reposetory inside it. The tracker now supports the trax protocol, which is necessary for VOT2017 version of the toolkit.
 
 
 ### Raw Results

@@ -25,7 +25,13 @@ end
 % matconvnet
 if exist('external_libs/matconvnet/matlab', 'dir') == 7
     cd external_libs/matconvnet/matlab
-    vl_compilenn;
+    try
+        disp('Trying to compile MatConvNet with GPU support')
+        vl_compilenn('enableGpu', true)
+    catch err
+        warning('ECO:install', 'Could not compile MatConvNet with GPU support. Compiling for only CPU instead.\nVisit http://www.vlfeat.org/matconvnet/install/ for instructions of how to compile MatConvNet.\nNote: remember to move the mex-files after re-compiling.');
+        vl_compilenn;
+    end
     status = movefile('mex/vl_*.mex*');
     cd(home_dir)
     

@@ -18,6 +18,9 @@ end
 if ~isfield(gparams, 'square_root_normalization')
     gparams.square_root_normalization = false;
 end
+if ~isfield(gparams, 'use_gpu')
+    gparams.use_gpu = false;
+end
 
 % find which features to keep
 feat_ind = false(length(features),1);
@@ -34,10 +37,6 @@ for n = 1:length(features)
     if (features{n}.fparams.useForColor && is_color_image) || (features{n}.fparams.useForGray && ~is_color_image)
         % keep feature
         feat_ind(n) = true;
-    end
-    
-    if ~isfield(features{n}.fparams,'use_gpu')
-        features{n}.fparams.use_gpu = false;
     end
 end
 
@@ -56,7 +55,10 @@ feature_info.min_cell_size = zeros(num_features,1);
 % - loading and initializing necessary data (e.g. the lookup table or the network)
 for k = 1:length(features)
     if isequal(features{k}.getFeature, @get_fhog)
-        features{k}.fparams.nDim = 31;  % Should be calculated based on the number of orientations
+        if ~isfield(features{k}.fparams, 'nOrients')
+            features{k}.fparams.nOrients = 9;
+        end
+        features{k}.fparams.nDim = 3*features{k}.fparams.nOrients+5-1;
         features{k}.is_cell = false;
         features{k}.is_cnn = false;
         
@@ -85,9 +87,6 @@ for k = 1:length(features)
         if ~isfield(features{k}.fparams, 'downsample_factor')
             features{k}.fparams.downsample_factor = ones(1, length(features{k}.fparams.output_layer));
         end
-        if ~isfield(features{k}.fparams, 'return_gpu')
-            features{k}.fparams.return_gpu = false;
-        end
         
         % load the network
         net = load_cnn(features{k}.fparams, img_sample_sz);
@@ -110,10 +109,7 @@ for k = 1:length(features)
         features{k}.is_cell = true;
         features{k}.is_cnn = true;
     elseif isequal(features{k}.getFeature,@get_eitel_cnn)
-        
         features{k}.fparams = make_eitel_feature(features{k}.fparams);
-        
-        
     else
         error('Unknown feature type');
     end
@@ -162,8 +158,6 @@ end
 % features. It then computes the data size (size of the features) and the
 % image support size (the corresponding size in the image).
 if cnn_feature_ind > 0
-    % Search for an appropriate image size looking at the last layer
-    
     scale = features{cnn_feature_ind}.fparams.input_size_scale;
     
     new_img_sample_sz = img_sample_sz;
@@ -225,11 +219,14 @@ if cnn_feature_ind > 0
     % Set the input size
     features{cnn_feature_ind}.fparams.net = set_cnn_input_size(net, feature_info.img_sample_sz);
     
-    if features{cnn_feature_ind}.fparams.use_gpu
-        gpuDevice(features{cnn_feature_ind}.fparams.gpu_id);
+    if gparams.use_gpu
+        if isempty(gparams.gpu_id)
+            gpuDevice();
+        elseif gparams.gpu_id > 0
+            gpuDevice(gparams.gpu_id);
+        end
         features{cnn_feature_ind}.fparams.net = vl_simplenn_move(features{cnn_feature_ind}.fparams.net, 'gpu');
     end
-    
 else
     max_cell_size = max(feature_info.min_cell_size);
     
@@ -252,6 +249,7 @@ else
     end
     
     % Setting the feature size and support size
+    %     feature_info.data_sz = floor(bsxfun(@rdivide, feature_info.img_sample_sz, feature_info.min_cell_size));
     feature_info.img_support_sz = feature_info.img_sample_sz;
 end
 

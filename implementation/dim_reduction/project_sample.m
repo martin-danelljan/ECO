@@ -1,5 +1,15 @@
 function x = project_sample(x, P)
 
-if ~isempty(P)
-    x = cellfun(@(x, P) permute(mtimesx(permute(x, [4 3 1 2]), P, 'speed'), [3 4 2 1]), x, P, 'uniformoutput', false);
+if isempty(P)
+    return;
+end
+
+if isa(x{1}, 'gpuArray')
+    for k = 1:length(x)
+        x{k} = reshape(pagefun(@mtimes, reshape(x{k}, [], size(x{k},3), size(x{k},4)), P{k}), size(x{k},1), size(x{k},2), [], size(x{k},4));
+    end
+else
+    for k = 1:length(x)
+        x{k} = reshape(mtimesx(reshape(x{k}, [], size(x{k},3), size(x{k},4)), P{k}, 'speed'), size(x{k},1), size(x{k},2), [], size(x{k},4));
+    end
 end

@@ -18,8 +18,9 @@ end
 % Normalize with average image
 im = bsxfun(@minus, im, fparams.net.meta.normalization.averageImage);
 
-if fparams.use_gpu
-    cnn_feat = vl_simplenn(fparams.net,im,[],[],'CuDNN',true, 'Mode', 'test');
+if gparams.use_gpu
+    im = gpuArray(im);
+    cnn_feat = vl_simplenn(fparams.net, im,[],[],'CuDNN',true, 'Mode', 'test');
 else
     cnn_feat = vl_simplenn(fparams.net, im, [], [], 'Mode', 'test');
 end
@@ -27,33 +28,10 @@ end
 feature_map = cell(1,1,length(fparams.output_layer));
 
 for k = 1:length(fparams.output_layer)
-    % Move data to CPU if using GPU
-%     if fparams.use_gpu
-%         cnn_feat(fparams.output_layer(k) + 1).x = gather(cnn_feat(fparams.output_layer(k) + 1).x);
-%     end
-    
-    if fparams.use_gpu
-        if fparams.downsample_factor(k) == 1
-            temp_feat = cnn_feat(fparams.output_layer(k) + 1).x(fparams.start_ind(k,1):fparams.end_ind(k,1), fparams.start_ind(k,2):fparams.end_ind(k,2), :, :);
-            if fparams.return_gpu
-                feature_map{k} = temp_feat;
-            else
-                feature_map{k} = gather(temp_feat);
-            end
-        else
-            temp_feat = average_feature_region(cnn_feat(fparams.output_layer(k) + 1).x(fparams.start_ind(k,1):fparams.end_ind(k,1), fparams.start_ind(k,2):fparams.end_ind(k,2), :, :), fparams.downsample_factor(k));
-            if fparams.return_gpu
-                feature_map{k} = temp_feat;
-            else
-                feature_map{k} = gather(temp_feat);
-            end
-        end
+    if fparams.downsample_factor(k) == 1
+        feature_map{k} = cnn_feat(fparams.output_layer(k) + 1).x(fparams.start_ind(k,1):fparams.end_ind(k,1), fparams.start_ind(k,2):fparams.end_ind(k,2), :, :);
     else
-        if fparams.downsample_factor(k) == 1
-            feature_map{k} = cnn_feat(fparams.output_layer(k) + 1).x(fparams.start_ind(k,1):fparams.end_ind(k,1), fparams.start_ind(k,2):fparams.end_ind(k,2), :, :);
-        else
-            feature_map{k} = average_feature_region(cnn_feat(fparams.output_layer(k) + 1).x(fparams.start_ind(k,1):fparams.end_ind(k,1), fparams.start_ind(k,2):fparams.end_ind(k,2), :, :), fparams.downsample_factor(k));
-        end
+        feature_map{k} = vl_nnpool(cnn_feat(fparams.output_layer(k) + 1).x(fparams.start_ind(k,1):fparams.end_ind(k,1), fparams.start_ind(k,2):fparams.end_ind(k,2), :, :), fparams.downsample_factor(k), 'stride', fparams.downsample_factor(k), 'method', 'avg');
     end
 end
 
