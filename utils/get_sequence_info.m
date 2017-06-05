@@ -19,7 +19,13 @@ if strcmpi(seq.format, 'otb')
     seq.rect_position = zeros(seq.num_frames, 4);
     init_image = imread(seq.image_files{1});
 elseif strcmpi(seq.format, 'vot')
-    [handle, init_image_file, init_region] = vot('polygon');
+    [seq.handle, init_image_file, init_region] = vot('polygon');
+    
+    if isempty(init_image_file)
+        init_image = [];
+        return;
+    end
+    
     init_image = imread(init_image_file);
     
     bb_scale = 1;
@@ -54,7 +60,6 @@ elseif strcmpi(seq.format, 'vot')
     seq.init_pos = init_c;
     seq.init_sz = min(max(round(init_sz), [1 1]), im_size(1:2));
     seq.num_frames = Inf;
-    seq.handle = handle;
     seq.region = init_region;
 else
     error('Uknown sequence format');
