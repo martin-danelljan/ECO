@@ -7,6 +7,13 @@ function results = tracker(params)
 % Get sequence info
 [seq, im] = get_sequence_info(params.seq);
 params = rmfield(params, 'seq');
+if isempty(im)
+    seq.rect_position = [];
+    [seq, results] = get_sequence_results(seq);
+    return;
+end
+
+% Init position
 pos = seq.init_pos(:)';
 target_sz = seq.init_sz(:)';
 params.init_sz = target_sz;
@@ -467,22 +474,26 @@ while true
         if seq.frame == 1
             % Initialize stuff for the filter learning
             
+            % Initialize Conjugate Gradient parameters
+            sample_energy = new_sample_energy;
+            CG_state = [];
+            
             if params.update_projection_matrix
+                % Number of CG iterations per GN iteration 
+                init_CG_opts.maxit = ceil(params.init_CG_iter / params.init_GN_iter);
+            
                 hf = cell(2,1,num_feature_blocks);
                 proj_energy = cellfun(@(P, yf) 2*sum(abs(yf(:)).^2) / sum(feature_dim) * ones(size(P), 'like', params.data_type), projection_matrix, yf, 'uniformoutput', false);
             else
+                CG_opts.maxit = params.init_CG_iter; % Number of initial iterations if projection matrix is not updated
+            
                 hf = cell(1,1,num_feature_blocks);
             end
+            
             % Initialize the filter with zeros
             for k = 1:num_feature_blocks
                 hf{1,1,k} = zeros([filter_sz(k,1) (filter_sz(k,2)+1)/2 sample_dim(k)], 'like', params.data_type_complex);
             end
-            
-            % Initialize Conjugate Gradient parameters
-            CG_opts.maxit = params.init_CG_iter; % Number of initial iterations if projection matrix is not updated
-            init_CG_opts.maxit = ceil(params.init_CG_iter / params.init_GN_iter);
-            sample_energy = new_sample_energy;
-            CG_state = [];
         else
             CG_opts.maxit = params.CG_iter;
             
