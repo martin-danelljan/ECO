@@ -2,6 +2,7 @@ function [seq, ground_truth] = load_video_info(video_path)
 
 ground_truth = dlmread([video_path '/groundtruth_rect.txt']);
 
+seq.format = 'otb';
 seq.len = size(ground_truth, 1);
 seq.init_rect = ground_truth(1,:);
 
