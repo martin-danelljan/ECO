@@ -101,6 +101,8 @@ These runfiles are included:
 
 * testing_ECO_HC.m  -  Demo file which contains the same settings as OTB_HC_settings.m by default.
 
+* SRDCF_settings.m  -  Settings that roughly correspond to our previous SRDCF tracker [4] from 2015. The main difference is the optimization method.
+
 Tracking performance on the OTB-2015 dataset is shown bellow for different settings. For comparison, results of our previous trackers C-COT [3], SRDCF [4], DeepSRDCF [5] and DSST [6] are included.
 
 <img src="https://github.com/martin-danelljan/ECO/blob/master/result_plots/OTB-2015_succsess_plot.png" alt="Could not display image" height=400 width=500>
