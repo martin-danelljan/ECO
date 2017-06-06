@@ -2,7 +2,7 @@
 
 Matlab implementation of the Efficient Convolution Operator (ECO) tracker.
 
-<b>Version 2.0 is here!</b>
+<b>News: Version 2.0 is here!</b> 
 * Full GPU support
 * Optimization and cleanup
 * VOT2017 integration
@@ -149,11 +149,13 @@ To integrate the tracker into the Visual Object Tracking (VOT) challenge toolkit
 
 ### Raw Results
 
-Tracking performance can also vary slightly on different machines and Matlab versions.
-
 All raw result files used in our CVPR 2017 paper can be found at the project webpage:
 http://www.cvl.isy.liu.se/research/objrec/visualtracking/ecotrack/index.html
 
+
+### Why Does the Result Change?
+
+Tracking performance may vary slightly on different machines and whether GPU support is activated. This is due to small numerical effects which can accumulate over time (all trackers are affected by this). Generally, this only affects the performance marginally. More significant changes are rare, but can occur in some videos. 
 
 ## References
 
