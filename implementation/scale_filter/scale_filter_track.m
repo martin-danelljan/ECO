@@ -12,7 +12,11 @@ xs = feature_projection_scale(xs, scale_filter.basis, scale_filter.window);
 % Get scores
 xsf = fft(xs, [], 2);
 scale_responsef = sum(scale_filter.sf_num .* xsf, 1) ./ (scale_filter.sf_den + params.lambda);
-interp_scale_response = ifft(resizeDFT(scale_responsef, params.number_of_interp_scales), 'symmetric');
+if is_octave()
+    interp_scale_response = real(ifft(resizeDFT(scale_responsef, params.number_of_interp_scales)));
+else
+    interp_scale_response = ifft(resizeDFT(scale_responsef, params.number_of_interp_scales), 'symmetric');
+end
 
 recovered_scale_index = find(interp_scale_response == max(interp_scale_response(:)), 1);
 

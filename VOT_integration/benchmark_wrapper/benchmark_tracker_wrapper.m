@@ -1,7 +1,8 @@
-function benchmark_tracker_wrapper(tracker_name, runfile_name, do_cleanup)
+function benchmark_tracker_wrapper(tracker_name, runfile_name, do_cleanup, is_octave)
 
 if nargin < 3
     do_cleanup = true;
+    is_octave = false;
 end
 
 % *************************************************************
@@ -21,7 +22,10 @@ try
 % *************************************************************
 % VOT: Set random seed to a different value every time.
 % *************************************************************
-RandStream.setGlobalStream(RandStream('mt19937ar', 'Seed', sum(clock)));
+if ~is_octave
+    RandStream.setGlobalStream(RandStream('mt19937ar', 'Seed', sum(clock)));
+end
+
 
 seq.format = 'vot';
 
