@@ -148,14 +148,13 @@ kx = cellfun(@(sz) -ceil((sz(2) - 1)/2) : 0, filter_sz_cell, 'uniformoutput', fa
 
 % construct the Gaussian label function using Poisson formula
 sig_y = sqrt(prod(floor(base_target_sz))) * params.output_sigma_factor * (output_sz ./ img_support_sz);
-% yf_y and yf_x, is 1x1x2 cell with vector
 yf_y = cellfun(@(ky) single(sqrt(2*pi) * sig_y(1) / output_sz(1) * exp(-2 * (pi * sig_y(1) * ky / output_sz(1)).^2)), ky, 'uniformoutput', false);
 yf_x = cellfun(@(kx) single(sqrt(2*pi) * sig_y(2) / output_sz(2) * exp(-2 * (pi * sig_y(2) * kx / output_sz(2)).^2)), kx, 'uniformoutput', false);
 yf = cellfun(@(yf_y, yf_x) cast(yf_y * yf_x, class(params.data_type)), yf_y, yf_x, 'uniformoutput', false);
 
 % construct cosine window
 cos_window = cellfun(@(sz) hann(sz(1)+2)*hann(sz(2)+2)', feature_sz_cell, 'uniformoutput', false);
-cos_window = cellfun(@(cos_window) cast(cos_window(2:end-1,2:end-1), 'single'), cos_window, 'uniformoutput', false);
+cos_window = cellfun(@(cos_window) cast(cos_window(2:end-1,2:end-1), class(params.data_type)), cos_window, 'uniformoutput', false);
 
 % Compute Fourier series of interpolation function
 [interp1_fs, interp2_fs] = cellfun(@(sz) get_interp_fourier(sz, params), filter_sz_cell, 'uniformoutput', false);
@@ -217,11 +216,11 @@ if params.use_gpu
     % In the GPU version, the data is stored in a more normal way since we
     % dont have to use mtimesx.
     for k = 1:num_feature_blocks
-        samplesf{k} = complex(zeros(filter_sz(k,1),(filter_sz(k,2)+1)/2,sample_dim(k),params.nSamples))
+        samplesf{k} = complex(zeros(filter_sz(k,1),(filter_sz(k,2)+1)/2,sample_dim(k),params.nSamples, class(params.data_type_complex)));
     end
 else
     for k = 1:num_feature_blocks
-        samplesf{k} = complex(zeros(params.nSamples,sample_dim(k),filter_sz(k,1),(filter_sz(k,2)+1)/2), 0);
+        samplesf{k} = complex(zeros(params.nSamples,sample_dim(k),filter_sz(k,1),(filter_sz(k,2)+1)/2, class(params.data_type_complex)));
     end
 end
 
@@ -499,7 +498,7 @@ while true
             
             % Initialize the filter with zeros
             for k = 1:num_feature_blocks
-                hf{1,1,k} = complex(zeros([filter_sz(k,1) (filter_sz(k,2)+1)/2 sample_dim(k)]));
+                hf{1,1,k} = complex(zeros([filter_sz(k,1) (filter_sz(k,2)+1)/2 sample_dim(k)], class(params.data_type_complex)));
             end
         else
             CG_opts.maxit = params.CG_iter;

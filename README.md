@@ -46,11 +46,11 @@ Webpage: http://users.isy.liu.se/cvl/marda26/
 
    $ git clone --recurse-submodules https://github.com/martin-danelljan/ECO.git
 
-1. Start Matlab/Octave and navigate to the repository path, run the install script:
+2. Start Matlab/Octave and navigate to the repository path, run the install script:
 
    |>> install
 
-1. Run the demo script to test the tracker:
+3. Run the demo script to test the tracker:
 
    |>> demo_ECO
 
