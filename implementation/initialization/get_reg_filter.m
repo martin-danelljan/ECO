@@ -32,7 +32,7 @@ if params.use_reg_window
     reg_window_dft = fftshift(reg_window_dft);
     
     % find the regularization filter by removing the zeros
-    reg_filter = cast(real(reg_window_dft(~all(reg_window_dft==0,2), ~all(reg_window_dft==0,1))), class(params.data_type));
+    reg_filter = cast(real(reg_window_dft(~all(reg_window_dft==0,2), ~all(reg_window_dft==0,1))), 'like', params.data_type);
 else
     % else use a scaled identity matrix
     reg_filter = cast(params.reg_window_min, 'like', params.data_type);
