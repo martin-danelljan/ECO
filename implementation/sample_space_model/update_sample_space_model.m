@@ -31,7 +31,7 @@ gram_vector = find_gram_vector(samplesf, new_train_sample, num_training_samples,
 % since we wannt to merge samples that are similar, and finding the best
 % match is not important, small error in the distance computation doesn't
 % matter
-new_train_sample_norm =  zeros(1,'like', params.data_type);
+new_train_sample_norm =  zeros(1, class(params.data_type));
 
 for k = 1:num_feature_blocks
     new_train_sample_norm = new_train_sample_norm + real(2*(new_train_sample{k}(:)' * new_train_sample{k}(:)));

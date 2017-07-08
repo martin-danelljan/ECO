@@ -4,6 +4,12 @@ function results = tracker(params)
 %% Initialization
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+% Load additional packages from Octave Forge
+if is_octave
+    pkg load signal;
+    pkg load image;
+end
+
 % Get sequence info
 [seq, im] = get_sequence_info(params.seq);
 params = rmfield(params, 'seq');
@@ -144,11 +150,11 @@ kx = cellfun(@(sz) -ceil((sz(2) - 1)/2) : 0, filter_sz_cell, 'uniformoutput', fa
 sig_y = sqrt(prod(floor(base_target_sz))) * params.output_sigma_factor * (output_sz ./ img_support_sz);
 yf_y = cellfun(@(ky) single(sqrt(2*pi) * sig_y(1) / output_sz(1) * exp(-2 * (pi * sig_y(1) * ky / output_sz(1)).^2)), ky, 'uniformoutput', false);
 yf_x = cellfun(@(kx) single(sqrt(2*pi) * sig_y(2) / output_sz(2) * exp(-2 * (pi * sig_y(2) * kx / output_sz(2)).^2)), kx, 'uniformoutput', false);
-yf = cellfun(@(yf_y, yf_x) cast(yf_y * yf_x, 'like', params.data_type), yf_y, yf_x, 'uniformoutput', false);
+yf = cellfun(@(yf_y, yf_x) cast(yf_y * yf_x, class(params.data_type)), yf_y, yf_x, 'uniformoutput', false);
 
 % construct cosine window
 cos_window = cellfun(@(sz) hann(sz(1)+2)*hann(sz(2)+2)', feature_sz_cell, 'uniformoutput', false);
-cos_window = cellfun(@(cos_window) cast(cos_window(2:end-1,2:end-1), 'like', params.data_type), cos_window, 'uniformoutput', false);
+cos_window = cellfun(@(cos_window) cast(cos_window(2:end-1,2:end-1), class(params.data_type)), cos_window, 'uniformoutput', false);
 
 % Compute Fourier series of interpolation function
 [interp1_fs, interp2_fs] = cellfun(@(sz) get_interp_fourier(sz, params), filter_sz_cell, 'uniformoutput', false);
@@ -204,17 +210,17 @@ seq.time = 0;
 
 % Initialize and allocate
 prior_weights = zeros(params.nSamples,1, 'single');
-sample_weights = cast(prior_weights, 'like', params.data_type);
+sample_weights = cast(prior_weights, class(params.data_type));
 samplesf = cell(1, 1, num_feature_blocks);
 if params.use_gpu
     % In the GPU version, the data is stored in a more normal way since we
     % dont have to use mtimesx.
     for k = 1:num_feature_blocks
-        samplesf{k} = zeros(filter_sz(k,1),(filter_sz(k,2)+1)/2,sample_dim(k),params.nSamples, 'like', params.data_type_complex);
+        samplesf{k} = complex(zeros(filter_sz(k,1),(filter_sz(k,2)+1)/2,sample_dim(k),params.nSamples, class(params.data_type_complex)));
     end
 else
     for k = 1:num_feature_blocks
-        samplesf{k} = zeros(params.nSamples,sample_dim(k),filter_sz(k,1),(filter_sz(k,2)+1)/2, 'like', params.data_type_complex);
+        samplesf{k} = complex(zeros(params.nSamples,sample_dim(k),filter_sz(k,1),(filter_sz(k,2)+1)/2, class(params.data_type_complex)));
     end
 end
 
@@ -463,7 +469,7 @@ while true
         end
     end
 
-    sample_weights = cast(prior_weights, 'like', params.data_type);
+    sample_weights = cast(prior_weights, class(params.data_type));
            
     train_tracker = (seq.frame < params.skip_after_frame) || (frames_since_last_train >= params.train_gap);
     
@@ -483,7 +489,7 @@ while true
                 init_CG_opts.maxit = ceil(params.init_CG_iter / params.init_GN_iter);
             
                 hf = cell(2,1,num_feature_blocks);
-                proj_energy = cellfun(@(P, yf) 2*sum(abs(yf(:)).^2) / sum(feature_dim) * ones(size(P), 'like', params.data_type), projection_matrix, yf, 'uniformoutput', false);
+                proj_energy = cellfun(@(P, yf) 2*sum(abs(yf(:)).^2) / sum(feature_dim) * ones(size(P), class(params.data_type)), projection_matrix, yf, 'uniformoutput', false);
             else
                 CG_opts.maxit = params.init_CG_iter; % Number of initial iterations if projection matrix is not updated
             
@@ -492,7 +498,7 @@ while true
             
             % Initialize the filter with zeros
             for k = 1:num_feature_blocks
-                hf{1,1,k} = zeros([filter_sz(k,1) (filter_sz(k,2)+1)/2 sample_dim(k)], 'like', params.data_type_complex);
+                hf{1,1,k} = complex(zeros([filter_sz(k,1) (filter_sz(k,2)+1)/2 sample_dim(k)], class(params.data_type_complex)));
             end
         else
             CG_opts.maxit = params.CG_iter;
@@ -648,7 +654,9 @@ while true
             imagesc(im_to_show);
             hold on;
             resp_handle = imagesc(xs, ys, sampled_scores_display); colormap hsv;
-            alpha(resp_handle, 0.5);
+            if ~is_octave()
+                alpha(resp_handle, 0.5);
+            end
             rectangle('Position',rect_position_vis, 'EdgeColor','g', 'LineWidth',2);
             text(10, 10, int2str(seq.frame), 'color', [0 1 1]);
             hold off;

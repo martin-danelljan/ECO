@@ -1,6 +1,6 @@
 # ECO
 
-Matlab implementation of the Efficient Convolution Operator (ECO) tracker.
+Matlab/Octave implementation of the Efficient Convolution Operator (ECO) tracker.
 
 <b>News: Version 2.0 is here!</b> 
 * Full GPU support
@@ -42,27 +42,21 @@ Webpage: http://users.isy.liu.se/cvl/marda26/
 
 ### Using git clone
 
-1. Clone the GIT repository:
+1. Clone the GIT repository and submodules:
 
-   $ git clone https://github.com/martin-danelljan/ECO.git
+   $ git clone --recurse-submodules https://github.com/martin-danelljan/ECO.git
 
-2. Clone the submodules.  
-   In the repository directory, run the commands:
-
-   $ git submodule init  
-   $ git submodule update
-
-3. Start Matlab and navigate to the repository.  
-   Run the install script:
+2. Start Matlab/Octave and navigate to the repository path, run the install script:
 
    |>> install
 
-4. Run the demo script to test the tracker:
+3. Run the demo script to test the tracker:
 
    |>> demo_ECO
 
 
-Note:  
+#### Note:
+
 This package requires matconvnet [1], if you want to use deep CNN features, and PDollar Toolbox [2], if you want to use HOG features. Both these externals are included as git submodules and should be installed by following step 2. above.
 
 
