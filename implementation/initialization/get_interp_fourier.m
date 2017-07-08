@@ -38,6 +38,5 @@ if params.interpolation_windowing
     interp2_fs = interp2_fs .* win2(2:end-1)';
 end
 
-% interp1_fs and interp2_fs are 1x41 matrix with double
-interp1_fs = cast(interp1_fs, class(params.data_type));
-interp2_fs = cast(interp2_fs, class(params.data_type));
+interp1_fs = cast(interp1_fs, 'like', params.data_type);
+interp2_fs = cast(interp2_fs, 'like', params.data_type);

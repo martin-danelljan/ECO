@@ -1,7 +1,7 @@
 function xf = cfft2(x)
 
 % Find the data type
-data_type_complex = complex(zeros(1, class(x)));
+data_type_complex = complex(zeros(1, 'like', x));
 
 % calculate output size
 in_sz = size(x);
