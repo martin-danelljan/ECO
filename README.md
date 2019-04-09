@@ -1,11 +1,8 @@
+### News: Check our [pytracking](https://github.com/visionml/pytracking) repository, which includes a PyTorch-based implementation of ECO and our most recent tracker [ATOM](https://arxiv.org/pdf/1811.07628.pdf).
+
 # ECO
 
 Matlab implementation of the Efficient Convolution Operator (ECO) tracker.
-
-<b>News: Version 2.0 is here!</b> 
-* Full GPU support
-* Optimization and cleanup
-* VOT2017 integration
 
 ## Publication
 
