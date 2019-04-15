@@ -8,7 +8,7 @@ Matlab implementation of the Efficient Convolution Operator (ECO) tracker.
 
 Details about the tracker can be found in the CVPR 2017 paper:
 
-Martin Danelljan, Goutam Bhat, Fahad Khan, Michael Felsberg.  
+[Martin Danelljan](https://martin-danelljan.github.io/), Goutam Bhat, Fahad Khan, Michael Felsberg.  
 <a href="https://arxiv.org/abs/1611.09224">ECO: Efficient Convolution Operators for Tracking</a>.  
 In Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition (CVPR), 2017. 
 
