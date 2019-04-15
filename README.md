@@ -29,11 +29,7 @@ http://www.cvl.isy.liu.se/research/objrec/visualtracking/ecotrack/index.html
 
 ## Contact
 
-Martin Danelljan
-
-Email: martin.danelljan@liu.se  
-Webpage: http://users.isy.liu.se/cvl/marda26/
-
+[Martin Danelljan](https://martin-danelljan.github.io/)
 
 ## Installation
 
