@@ -152,6 +152,12 @@ http://www.cvl.isy.liu.se/research/objrec/visualtracking/ecotrack/index.html
 
 Tracking performance may vary slightly on different machines and whether GPU support is activated. This is due to small numerical effects which can accumulate over time (all trackers are affected by this). Generally, this only affects the performance marginally. More significant changes are rare, but can occur in some videos. 
 
+## Code References
+
+*[visionml/pytracking](https://github.com/visionml/pytracking)*: Python (PyTorch) implementation of ECO and general tracking library containing official implementation of our latest trackers [ATOM](https://arxiv.org/pdf/1811.07628.pdf) and [DiMP](https://arxiv.org/pdf/1904.07220.pdf)  
+
+*[rockkingjy/OpenTracker](https://github.com/rockkingjy/OpenTracker)*: C++ Implementation of ECO and other trackers 
+
 ## References
 
 [1] Webpage: http://www.vlfeat.org/matconvnet/  
