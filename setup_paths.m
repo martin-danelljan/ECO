@@ -17,8 +17,8 @@ addpath([pathstr '/utils/']);
 addpath(genpath([pathstr '/feature_extraction/']));
 
 % Matconvnet
-addpath([pathstr '/external_libs/matconvnet/matlab/mex/']);
 addpath([pathstr '/external_libs/matconvnet/matlab']);
+addpath([pathstr '/external_libs/matconvnet/matlab/mex/']);
 addpath([pathstr '/external_libs/matconvnet/matlab/simplenn']);
 
 % PDollar toolbox
