@@ -1,4 +1,4 @@
-### News: Check our [pytracking](https://github.com/visionml/pytracking) repository, which includes a PyTorch-based implementation of ECO and our most recent tracker [ATOM](https://arxiv.org/pdf/1811.07628.pdf).
+### News: Check our [pytracking](https://github.com/visionml/pytracking) repository, which includes a PyTorch-based implementation of ECO and our most recent trackers [ATOM (CVPR 2019)](https://arxiv.org/pdf/1811.07628.pdf) and [DiMP (ICCV 2019)](https://arxiv.org/pdf/1904.07220.pdf).
 
 # ECO
 
@@ -157,6 +157,8 @@ Tracking performance may vary slightly on different machines and whether GPU sup
 *[visionml/pytracking](https://github.com/visionml/pytracking)*: Python (PyTorch) implementation of ECO and general tracking library containing official implementation of our latest trackers [ATOM](https://arxiv.org/pdf/1811.07628.pdf) and [DiMP](https://arxiv.org/pdf/1904.07220.pdf)  
 
 *[rockkingjy/OpenTracker](https://github.com/rockkingjy/OpenTracker)*: C++ Implementation of ECO and other trackers 
+
+*[StrangerZhang/pyECO](https://github.com/StrangerZhang/pyECO)*: Python implementation of ECO using numpy, mxnet and cupy
 
 ## References
 
